@@ -123,7 +123,9 @@ def multiplicative_inverse_modulo(a, m):
             m = a
             a = r
         print(f'Looking for inverse')
-        print(f'Inverse for a={_a} and m={_m} is: {mod_inv(_a, _m)}')
+        res = mod_inv(_a, _m)
+        print(f'Inverse for a={_a} and m={_m} is: {res}')
+        return res
     else:
         print('Greatest common divisor is not 1')
         print('exit')
@@ -183,7 +185,7 @@ def RSA(p, q, e=0):
                     break
 
     print('d is a number: 1 < d < phi(n) and e*d = 1 mod phi(n)')
-    d = mod_inv(e, phi)
+    d = multiplicative_inverse_modulo(e, phi)
     if d > 0:
         print(f'd = {d}')
         print('----------------------------------')
@@ -220,9 +222,10 @@ def message_RSA(num, p, q, e=0):
 
 if __name__ == '__main__':
 
-    message_RSA(10, 61, 97, 47)
-    # RSA(61, 97)
+    # message_RSA(10, 61, 97, 47)
+    # multiplicative_inverse_modulo(7, 40)
+    RSA(5, 11, 7)
     # diffie_hellman(17, 4)
     # greatest_common_divisor(13, 7)
-    # fermats_little_theorem(5, 7, 11)
-    # multiplicative_inverse_modulo(30, 15)
+    # fermats_little_theorem(10, 99, 9)
+
