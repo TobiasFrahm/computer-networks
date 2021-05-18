@@ -162,7 +162,7 @@ def diffie_hellman(p, alpha):
     print(f'k_BA = A^b mod p = {pow(A, b) % p}')
 
 
-def RSA(p, q):
+def RSA(p, q, e=0):
     print('Basic principal is a big number, decomposed in its prime factors')
     print('and the decomposition into prime factors')
     print('Key Generation')
@@ -172,14 +172,15 @@ def RSA(p, q):
     print(f'phi(n) = phi({n}) = (p - 1) * (q - 1) = {(p - 1) * (q - 1)}')
     phi = eulersche_phi(n)
     print(f'Choose a small odd number e between 1 < e < phi(n) and ggT(e, phi(n)) == 1')
-    e = 0
-    for possible_e in range(2, phi):
-        # is possible_e odd?
-        if possible_e % 2 != 0:
-            if greatest_common_divisor(possible_e, phi) == 1:
-                e = possible_e
-                print(f'e = {e}')
-                break
+    if e == 0:
+        e = 0
+        for possible_e in range(2, phi):
+            # is possible_e odd?
+            if possible_e % 2 != 0:
+                if greatest_common_divisor(possible_e, phi) == 1:
+                    e = possible_e
+                    print(f'e = {e}')
+                    break
 
     print('d is a number: 1 < d < phi(n) and e*d = 1 mod phi(n)')
     d = mod_inv(e, phi)
@@ -196,10 +197,13 @@ def RSA(p, q):
     return public, private
 
 
-def message_RSA(num, p, q):
+def message_RSA(num, p, q, e=0):
     #block_print()
     start = time.time_ns()
-    (n, e), private = RSA(p, q)
+    if e != 0:
+        (n, e), private = RSA(p, q, e)
+    else:
+        (n, e), private = RSA(p, q)
     if num >= n:
         #enable_print()
         print(f'given number too big. Must be smaller than {n}')
@@ -216,9 +220,9 @@ def message_RSA(num, p, q):
 
 if __name__ == '__main__':
 
-    message_RSA(random.randint(0, 500), 67, 91)
+    message_RSA(10, 61, 97, 47)
     # RSA(61, 97)
     # diffie_hellman(17, 4)
     # greatest_common_divisor(13, 7)
     # fermats_little_theorem(5, 7, 11)
-    # multiplicative_inverse_modulo(12, 11)
+    # multiplicative_inverse_modulo(30, 15)
