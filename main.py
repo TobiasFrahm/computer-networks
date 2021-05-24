@@ -1,6 +1,8 @@
 #! /bin/python3
 
 import random
+import binascii
+import numpy
 import time
 import sys
 import os
@@ -18,7 +20,7 @@ def enable_print():
 
 def greatest_common_divisor(a, b):
     # ggT(a, b)
-    #print(f'Calculating the greatest common divisor of {a}, {b} ...')
+    # print(f'Calculating the greatest common divisor of {a}, {b} ...')
     r = 0
     if a == 0:
         return abs(b)
@@ -28,14 +30,14 @@ def greatest_common_divisor(a, b):
         r = a % b
         a = b
         b = r
-    #print(f'Greatest common divisor: {abs(a)}')
+    # print(f'Greatest common divisor: {abs(a)}')
     return abs(a)
 
 
 def is_not_comparable(a, b):
-    #print(f'Check if {a}, {b} are coprime to each other...')
+    # print(f'Check if {a}, {b} are coprime to each other...')
     if greatest_common_divisor(a, b) == 1:
-        #print(f'{a}, {b} are coprime to each other')
+        # print(f'{a}, {b} are coprime to each other')
         return True
     else:
         # print(f'{a}, {b} are NOT coprime to each other')
@@ -63,10 +65,10 @@ def fermats_little_theorem(a, exp, p):
     # a^(p-1) = 1 mod p
     # exp = (p - 1) * x
     # divide the exp by (p -1) and get the reminder.
-    x = int(exp / (p-1))
-    r = exp % (p-1)
+    x = int(exp / (p - 1))
+    r = exp % (p - 1)
     print(f'Divide the exp = {exp} by ({p}-1) and get the reminder.')
-    print(f'{exp} = {x} * {p-1} + {r}')
+    print(f'{exp} = {x} * {p - 1} + {r}')
     # since we know a^(p-1) = 1, we now know that a^(p-1)^(x) = 1^(x) = 1
     # taking care of the reminder
     reminder = pow(a, r, p)
@@ -116,7 +118,7 @@ def multiplicative_inverse_modulo(a, m):
     equations = []
     if greatest_common_divisor(a, m) == 1:
         while r != 0:
-            p = m//a
+            p = m // a
             r = m - (a * p)
             print(f'{m} = {a} * {p} + {r}')
             equations.append((m, a, p, r))
@@ -148,9 +150,9 @@ def diffie_hellman(p, alpha):
     if diffie_hellman_check(p, alpha):
         print(f'[Public]Selected Domain Parameter: p = {p}, alpha = {alpha}')
 
-    a = random.randint(2, (p-2))
+    a = random.randint(2, (p - 2))
     print(f'[Alice (private)] a = k_pr,A = {a}')
-    b = random.randint(2, (p-2))
+    b = random.randint(2, (p - 2))
     print(f'[Bob (private)] b = k_pr,B = {b}')
 
     A = pow(alpha, a) % p
@@ -200,32 +202,37 @@ def RSA(p, q, e=0):
 
 
 def message_RSA(num, p, q, e=0):
-    #block_print()
+    # block_print()
     start = time.time_ns()
     if e != 0:
         (n, e), private = RSA(p, q, e)
     else:
         (n, e), private = RSA(p, q)
     if num >= n:
-        #enable_print()
+        # enable_print()
         print(f'given number too big. Must be smaller than {n}')
         return
     chiffre = pow(num, e) % n
     cleartext = pow(chiffre, private) % n
     end = time.time_ns()
-    #enable_print()
+    # enable_print()
     print(f'Message: {num}')
     print(f'Encrypted {chiffre}')
     print(f'Decrypted {cleartext}')
     print(f'Total time: {round(round(end - start) / 1000000, 2)} ms')
 
 
-if __name__ == '__main__':
+def hex_to_bin(hexStr):
+    return "{0:08b}".format(int(hexStr, 16))
 
+
+if __name__ == '__main__':
     # message_RSA(10, 61, 97, 47)
     # multiplicative_inverse_modulo(7, 40)
-    RSA(5, 11, 7)
+    # RSA(5, 11, 7)
     # diffie_hellman(17, 4)
     # greatest_common_divisor(13, 7)
     # fermats_little_theorem(10, 99, 9)
+    print(hex_to_bin('F0F'))
+
 
