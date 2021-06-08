@@ -204,42 +204,42 @@ def diffie_hellman_EC(p, P, alice, bob, a):
     :return:
     """
     print(f'Agree on public parameters:\n prime number p = {p} and point P = {P} on an elliptic curve.')
-    _P = [P, P]
+    P_Base = P
     print('------------------------------------')
     print(f'Alice chooses random Number a = {alice}')
     print(f'Calculate A = k_pubA {alice}{P}')
     for i in range(alice - 1):
+        P_New = elliptic_curve((P_New if 'P_New' in locals() else P_Base), P, a, p)
         if not i:
             print(f'{i + 2}P = {P} + {P}')
         else:
-            print(f'{i + 2}P = {_P_tmp} + {P}')
-        _P_tmp = elliptic_curve(_P[1], P, a, p)
-        _P[0] = _P[1]
-        _P[1] = _P_tmp
-    k_pub_alice = _P[1]
+            print(f'{i + 2}P = {P_New} + {P}')
+    k_pub_alice = P_New
+
     # reset
-    _P = [P, P]
+    del P_New
     print('------------------------------------')
     print(f'Bob chooses random Number b = {bob}')
     print(f'Calculate B = k_pubB {bob}{P}')
+
     for i in range(bob - 1):
+        P_New = elliptic_curve((P_New if 'P_New' in locals() else P_Base), P, a, p)
         if not i:
             print(f'{i + 2}P = {P} + {P}')
         else:
-            print(f'{i + 2}P = {_P_tmp} + {P}')
-        _P_tmp = elliptic_curve(_P[1], P, a, p)
-        _P[0] = _P[1]
-        _P[1] = _P_tmp
-    k_pub_bob = _P[1]
+            print(f'{i + 2}P = {P_New} + {P}')
+    k_pub_bob = P_New
     print(f'\nPublic Keys:\n----------- \nAlice: A = {k_pub_alice} \nBob: B = {k_pub_bob}\n-----------')
     print('Take the Public Key, Calc Private Key')
 
-    _P = [k_pub_bob, k_pub_bob]
+    # reset
+    #Tab = alice*B
+    del P_New
+    P_Base = (k_pub_bob if alice < bob else k_pub_alice)
     for i in range((alice if alice < bob else bob) - 1):
-        _P_tmp = elliptic_curve(_P[0], _P[1], a, p)
-        _P[0] = _P[1]
-        _P[1] = _P_tmp
-    k_priv_alice_bob = _P[1]
+        P_New = elliptic_curve((P_New if 'P_New' in locals() else P_Base), P_Base, a, p)
+
+    k_priv_alice_bob = P_New
 
     print(f'Private Key for Alice AND Bob: {k_priv_alice_bob}')
 
@@ -310,18 +310,6 @@ if __name__ == '__main__':
     # multiplicative_inverse_modulo(2, 11)
     # RSA(5, 11, 7)
     # diffie_hellman_EC(11, (3, 8), 2, 10, (-43))
-
-    diffie_hellman_EC(17, (5, 1), 3, 10, 2)
     # greatest_common_divisor(13, 7)
     # fermats_little_theorem(7, 26, 53)
     # print(hex_to_bin('F0F'))
-    # TODO: Bitwise operation
-
-    # define the polynomials
-    # p(x) = 5(x**2) + (-2)x +5
-    # px = (1, 0, 0, 1, 1)
-
-    # g(x) = x +2
-    # gx = (1, 0, 1)
-    # qx, rx = numpy.polydiv(px, gx)
-    # print(qx, rx)
