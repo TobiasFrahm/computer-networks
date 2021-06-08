@@ -1,8 +1,6 @@
 #! /bin/python3
 
 import random
-import binascii
-import numpy
 import time
 import sys
 import os
@@ -67,7 +65,7 @@ def fermats_little_theorem(a, exp, p):
     # divide the exp by (p -1) and get the reminder.
     x = int(exp / (p - 1))
     r = exp % (p - 1)
-    print(f'Divide the exp = {exp} by ({p}-1) and get the reminder.')
+    print(f'Divide the exp = {exp} // ({p}-1) = {x} and get the reminder r={r}.')
     print(f'{exp} = {x} * {p - 1} + {r}')
     # since we know a^(p-1) = 1, we now know that a^(p-1)^(x) = 1^(x) = 1
     # taking care of the reminder
@@ -110,12 +108,14 @@ def mod_inv(a, m):
         return x
 
 
-def multiplicative_inverse_modulo(a, m):
+def multiplicative_inverse_modulo(a, m, out=False):
     # modulare multiplikative inverse
     _a = a
     _m = m
     r = 1
     equations = []
+    if not out:
+        block_print()
     if greatest_common_divisor(a, m) == 1:
         while r != 0:
             p = m // a
@@ -127,6 +127,8 @@ def multiplicative_inverse_modulo(a, m):
         print(f'Looking for inverse')
         res = mod_inv(_a, _m)
         print(f'Inverse for a={_a} and m={_m} is: {res}')
+        if not out:
+            enable_print()
         return res
     else:
         print('Greatest common divisor is not 1')
@@ -146,7 +148,33 @@ def diffie_hellman_check(p, a):
     return True
 
 
-def diffie_hellman(p, alpha):
+def elliptic_curve(P, Q, a, p):
+    # y² = x³ + a * x + b mod p
+    # calculate s
+    s = 0
+    (x_1, y_1) = (P[0], P[1])
+    (x_2, y_2) = (Q[0], Q[1])
+    #print(P, Q)
+    if P != Q:
+     #   print('Unequal, Punktaddition')
+        p1 = (y_2 - y_1)
+        p2 = multiplicative_inverse_modulo((x_2 - x_1), p)
+        s = (p1 * p2) % p
+    else:
+      #  print('Equal, Verdopplung')
+        p1 = (3 * pow(x_1, 2) + a)
+        p2 = multiplicative_inverse_modulo((2 * y_1), p)
+        s = (p1 * p2) % p
+
+    x_3 = (pow(s, 2) - x_1 - x_2)
+    x_3 = x_3 % p
+    y_3 = (s * (x_1 - x_3) - y_1)
+    y_3 = y_3 % p
+
+    return x_3, y_3
+
+
+def diffie_hellman_RSA(p, alpha):
     if diffie_hellman_check(p, alpha):
         print(f'[Public]Selected Domain Parameter: p = {p}, alpha = {alpha}')
 
@@ -164,6 +192,56 @@ def diffie_hellman(p, alpha):
 
     print(f'k_AB = B^a mod p = {pow(B, a) % p}')
     print(f'k_BA = A^b mod p = {pow(A, b) % p}')
+
+
+def diffie_hellman_EC(p, P, alice, bob, a):
+    """
+    :param p: modulo param, prime number
+    :param P: Point (x1, y1)
+    :param alice: How often will Alice Calculate the Curve
+    :param bob: How often will Bob Calculate the Curve
+    :param a: factor from y² = x³ + a * x + b mod p
+    :return:
+    """
+    print(f'Agree on public parameters:\n prime number p = {p} and point P = {P} on an elliptic curve.')
+    _P = [P, P]
+    print('------------------------------------')
+    print(f'Alice chooses random Number a = {alice}')
+    print(f'Calculate A = k_pubA {alice}{P}')
+    for i in range(alice - 1):
+        if not i:
+            print(f'{i + 2}P = {P} + {P}')
+        else:
+            print(f'{i + 2}P = {_P_tmp} + {P}')
+        _P_tmp = elliptic_curve(_P[1], P, a, p)
+        _P[0] = _P[1]
+        _P[1] = _P_tmp
+    k_pub_alice = _P[1]
+    # reset
+    _P = [P, P]
+    print('------------------------------------')
+    print(f'Bob chooses random Number b = {bob}')
+    print(f'Calculate B = k_pubB {bob}{P}')
+    for i in range(bob - 1):
+        if not i:
+            print(f'{i + 2}P = {P} + {P}')
+        else:
+            print(f'{i + 2}P = {_P_tmp} + {P}')
+        _P_tmp = elliptic_curve(_P[1], P, a, p)
+        _P[0] = _P[1]
+        _P[1] = _P_tmp
+    k_pub_bob = _P[1]
+    print(f'\nPublic Keys:\n----------- \nAlice: A = {k_pub_alice} \nBob: B = {k_pub_bob}\n-----------')
+    print('Take the Public Key, Calc Private Key')
+
+    _P = [k_pub_bob, k_pub_bob]
+    for i in range((alice if alice < bob else bob) - 1):
+        _P_tmp = elliptic_curve(_P[0], _P[1], a, p)
+        _P[0] = _P[1]
+        _P[1] = _P_tmp
+    k_priv_alice_bob = _P[1]
+
+    print(f'Private Key for Alice AND Bob: {k_priv_alice_bob}')
 
 
 def RSA(p, q, e=0):
@@ -228,11 +306,22 @@ def hex_to_bin(hexStr):
 
 if __name__ == '__main__':
     # message_RSA(10, 61, 97, 47)
-    # multiplicative_inverse_modulo(7, 40)
+    # print(elliptic_curve((3, 8), (3, 8), (-43), 11))
+    # multiplicative_inverse_modulo(2, 11)
     # RSA(5, 11, 7)
-    # diffie_hellman(17, 4)
+    # diffie_hellman_EC(11, (3, 8), 2, 10, (-43))
+
+    diffie_hellman_EC(17, (5, 1), 3, 10, 2)
     # greatest_common_divisor(13, 7)
-    # fermats_little_theorem(10, 99, 9)
-    print(hex_to_bin('F0F'))
+    # fermats_little_theorem(7, 26, 53)
+    # print(hex_to_bin('F0F'))
+    # TODO: Bitwise operation
 
+    # define the polynomials
+    # p(x) = 5(x**2) + (-2)x +5
+    # px = (1, 0, 0, 1, 1)
 
+    # g(x) = x +2
+    # gx = (1, 0, 1)
+    # qx, rx = numpy.polydiv(px, gx)
+    # print(qx, rx)
