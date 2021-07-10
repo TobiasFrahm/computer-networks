@@ -131,7 +131,6 @@ def multiplicative_inverse_modulo(a, m, out=False):
     :param out:
     :return:
     """
-    # modulare multiplikative inverse
     _a = a
     _m = m
     r = 1
@@ -338,20 +337,18 @@ def message_RSA(num, p, q, e=0):
     :param e: e
     :return:
     """
-    # block_print()
     start = time.time_ns()
     if e != 0:
         (n, e), private = RSA(p, q, e)
     else:
         (n, e), private = RSA(p, q)
     if num >= n:
-        # enable_print()
         print(f'given number too big. Must be smaller than {n}')
         return
+    # FYI: private = d
     chiffre = pow(num, e) % n
     cleartext = pow(chiffre, private) % n
     end = time.time_ns()
-    # enable_print()
     print(f'Message: {num}')
     print(f'Encrypted: {num}exp({e}) mod {n} = {chiffre}')
     print(f'Decrypted: {chiffre}exp({private}) mod {n} = {cleartext}')
@@ -366,7 +363,7 @@ def hex_to_bin(hexStr):
 
 if __name__ == '__main__':
     #### RSA ####
-    # message_RSA(4, 13, 7)
+    message_RSA(32, 13, 7)
     # RSA(5, 11, 7)
 
     #### Elliptische Kurve ####
@@ -375,5 +372,6 @@ if __name__ == '__main__':
     #### MISC ####
     # print(greatest_common_divisor(2689, 4001))
     # multiplicative_inverse_modulo(2, 11)
-    # fermats_little_theorem(7, 26, 53)
+    # fermats_little_theorem(21, 12, 13)
+    # eulersche_phi(495)
     print('Done...')
