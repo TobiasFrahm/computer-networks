@@ -32,7 +32,7 @@ def greatest_common_divisor(a, b, out=True):
         a = b
         b = r
         try:
-            print(f'{b} = {int(a / b) } * {b} + {a % b}')
+            print(f'{b} = {int(a / b)} * {b} + {a % b}')
         except BaseException as err:
             pass
     if not out:
@@ -363,11 +363,12 @@ def hex_to_bin(hexStr):
 
 if __name__ == '__main__':
     #### RSA ####
-    message_RSA(32, 13, 7)
+    # message_RSA(32, 13, 7)
     # RSA(5, 11, 7)
 
     #### Elliptische Kurve ####
-    # diffie_hellman_EC(11, (2, 1), 2, 1, 1)
+    # diffie_hellman_EC(7, (2, 5), 2, 1, -43)
+    # elliptic_curve((2, 5), (3, 6), -43, 7)
 
     #### MISC ####
     # print(greatest_common_divisor(2689, 4001))
