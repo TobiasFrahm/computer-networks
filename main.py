@@ -6,7 +6,7 @@ import sys
 import os
 
 
-def block_print():
+def disable_print():
     # Disable
     sys.stdout = open(os.devnull, 'w')
 
@@ -20,7 +20,7 @@ def greatest_common_divisor(a, b, out=True):
     # ggT(a, b)
     print(f'Calculating the greatest common divisor of {a}, {b} ...')
     if not out:
-        block_print()
+        disable_print()
     r = 0
     if a == 0:
         return abs(b)
@@ -41,22 +41,29 @@ def greatest_common_divisor(a, b, out=True):
     return abs(a)
 
 
-def is_not_comparable(a, b):
-    # print(f'Check if {a}, {b} are coprime to each other...')
+def is_not_comparable(a, b, out=False):
+    res = False
+    if not out:
+        disable_print()
+    print(f'Check if {a}, {b} are coprime to each other...')
 
     if greatest_common_divisor(a, b) == 1:
-        # print(f'{a}, {b} are coprime to each other')
-        return True
+        print(f'{a}, {b} are coprime to each other')
+        res = True
     else:
-        # print(f'{a}, {b} are NOT coprime to each other')
-        return False
+        print(f'{a}, {b} are NOT coprime to each other')
+        res = False
+
+    if not out:
+        enable_print()
+    return res
 
 
 def eulersche_phi(n):
     body = []
     phi = 0
     # print(f'Calculate the Body for n={n}')
-    block_print()
+    disable_print()
     for i in range(n):
         if is_not_comparable(i, n):
             # phi(n) is the number of coprime numbers within the body of n
@@ -136,7 +143,7 @@ def multiplicative_inverse_modulo(a, m, out=False):
     r = 1
     equations = []
     if not out:
-        block_print()
+        disable_print()
     if greatest_common_divisor(a, m, out=False) == 1:
         while r != 0:
             p = m // a
@@ -154,6 +161,8 @@ def multiplicative_inverse_modulo(a, m, out=False):
     else:
         print('Greatest common divisor is not 1')
         print('exit')
+        if not out:
+            enable_print()
         return 0
 
 
@@ -371,7 +380,7 @@ if __name__ == '__main__':
     # elliptic_curve((2, 5), (3, 6), -43, 7)
 
     #### MISC ####
-    print(greatest_common_divisor(280, 147))
+    # print(greatest_common_divisor(280, 147))
     # multiplicative_inverse_modulo(2, 11)
     # fermats_little_theorem(21, 12, 13)
     # eulersche_phi(495)
