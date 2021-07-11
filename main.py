@@ -26,7 +26,7 @@ def greatest_common_divisor(a, b, out=True):
         return abs(b)
     if b == 0:
         return abs(a)
-    print(f'{b} = {int(b / a)} * {a} + {b - a * int(b / a)}')
+    print(f'{a} = {int(a / b)} * {b} + {b - a * int(b / a)}')
     while b != 0:
         r = a % b
         a = b
@@ -371,7 +371,7 @@ if __name__ == '__main__':
     # elliptic_curve((2, 5), (3, 6), -43, 7)
 
     #### MISC ####
-    # print(greatest_common_divisor(2689, 4001))
+    print(greatest_common_divisor(280, 147))
     # multiplicative_inverse_modulo(2, 11)
     # fermats_little_theorem(21, 12, 13)
     # eulersche_phi(495)
