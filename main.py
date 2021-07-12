@@ -6,6 +6,18 @@ import sys
 import os
 
 
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
 def disable_print():
     # Disable
     sys.stdout = open(os.devnull, 'w')
@@ -16,7 +28,7 @@ def enable_print():
     sys.stdout = sys.__stdout__
 
 
-def greatest_common_divisor(a, b, out=True):
+def greatest_common_divisor(a, b, out=False):
     # ggT(a, b)
     print(f'Calculating the greatest common divisor of {a}, {b} ...')
     if not out:
@@ -26,13 +38,15 @@ def greatest_common_divisor(a, b, out=True):
         return abs(b)
     if b == 0:
         return abs(a)
-    print(f'{a} = {int(a / b)} * {b} + {b - a * int(b / a)}')
     while b != 0:
         r = a % b
         a = b
         b = r
         try:
-            print(f'{b} = {int(a / b)} * {b} + {a % b}')
+            if a % b != 0:
+                print(f'{a} = {int(a / b)} * {b} + {a % b}')
+            else:
+                print(f'{a} = {int(a / b)} *', color.CYAN + f'{b}' + color.END + f' + {a % b}')
         except BaseException as err:
             pass
     if not out:
@@ -377,6 +391,39 @@ def message_RSA(num, p, q, e=0):
 def hex_to_bin(hexStr):
     return "{0:08b}".format(int(hexStr, 16))
 
+from itertools import chain
+
+
+def faktorisiere(n):
+    l = []  # Lösungsmenge
+    # Auf Teilbarkeit durch 2, und alle ungeraden Zahlen von 3..n/2 testen
+    for i in chain([2], range(3, n//2 + 1, 2)):
+        # Ein Teiler kann mehrfach vorkommen (z.B. 4 = 2 * 2), deswegen:
+        while n % i == 0:
+            l.append(i)
+            n = n // i  # "//" ist ganzzahlige Division und entspricht int(n/i)
+        if i > n:  # Alle Teiler gefunden? Dann Abbruch.
+            break
+    return l
+
+def ggT2(a, b):
+    a_ = faktorisiere(a)
+    b_ = faktorisiere(b)
+    print(f'Prime factor of {a}: {a_}')
+    print(f'Prime factor of {b}: {b_}')
+    ggt = 0
+    for num in reversed(a_):
+        if num in b_ and num == max(b_):
+            ggt = num
+            break
+        else:
+            for num_ in reversed(b_):
+                if num_ in a_:
+                    ggt = num_
+                    break
+    print(f'ggT({a}, {b}) = {ggt}')
+
+
 
 if __name__ == '__main__':
     #### RSA ####
@@ -388,7 +435,9 @@ if __name__ == '__main__':
     # elliptic_curve((2, 5), (3, 6), -43, 7)
 
     #### MISC ####
-    # print(greatest_common_divisor(280, 147))
+    # greatest_common_divisor(40, 7, True)
+    #print(max(faktorisiere(280)))
+    #print(faktorisiere(147))
     # multiplicative_inverse_modulo(2, 11)
     # fermats_little_theorem(21, 12, 13)
     # eulersche_phi(9)
