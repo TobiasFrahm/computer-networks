@@ -1,5 +1,6 @@
 #! /bin/python3
 
+from itertools import chain
 import random
 import time
 import sys
@@ -158,7 +159,7 @@ def multiplicative_inverse_modulo(a, m, out=False):
     equations = []
     if not out:
         disable_print()
-    if greatest_common_divisor(a, m, out=out) == 1:
+    if greatest_common_divisor(a, m, out=True) == 1:
         while r != 0:
             p = m // a
             r = m - (a * p)
@@ -391,8 +392,6 @@ def message_RSA(num, p, q, e=0):
 def hex_to_bin(hexStr):
     return "{0:08b}".format(int(hexStr, 16))
 
-from itertools import chain
-
 
 def faktorisiere(n):
     l = []  # Lösungsmenge
@@ -418,7 +417,7 @@ if __name__ == '__main__':
     # elliptic_curve((2, 5), (3, 6), -43, 7)
 
     #### MISC ####
-    # greatest_common_divisor(40, 7, True)
+    # greatest_common_divisor(40, 7, out=True)
     # multiplicative_inverse_modulo(2, 11)
     # fermats_little_theorem(21, 12, 13)
     # eulersche_phi(9)
