@@ -406,23 +406,6 @@ def faktorisiere(n):
             break
     return l
 
-def ggT2(a, b):
-    a_ = faktorisiere(a)
-    b_ = faktorisiere(b)
-    print(f'Prime factor of {a}: {a_}')
-    print(f'Prime factor of {b}: {b_}')
-    ggt = 0
-    for num in reversed(a_):
-        if num in b_ and num == max(b_):
-            ggt = num
-            break
-        else:
-            for num_ in reversed(b_):
-                if num_ in a_:
-                    ggt = num_
-                    break
-    print(f'ggT({a}, {b}) = {ggt}')
-
 
 
 if __name__ == '__main__':
@@ -436,8 +419,6 @@ if __name__ == '__main__':
 
     #### MISC ####
     # greatest_common_divisor(40, 7, True)
-    #print(max(faktorisiere(280)))
-    #print(faktorisiere(147))
     # multiplicative_inverse_modulo(2, 11)
     # fermats_little_theorem(21, 12, 13)
     # eulersche_phi(9)
