@@ -304,6 +304,12 @@ def diffie_hellman_EC(p, P, alice, bob, a):
 
 
 def RSA(p, q, e=0):
+    """
+    :param p: prime number
+    :param q: prime number
+    :param e: public key
+    :return:
+    """
     print('Basic principal is a big number, decomposed in its prime factors')
     print('and the decomposition into prime factors')
     print('Key Generation')
@@ -312,18 +318,20 @@ def RSA(p, q, e=0):
     print(f'n = p * q = {p} * {q} = {n}')
     print(f'phi(n) = phi({n}) = (p - 1) * (q - 1) = {(p - 1) * (q - 1)}')
     phi = eulersche_phi(n)
-    print(f'Choose a small odd number e between 1 < e < phi(n) and ggT(e, phi(n)) == 1')
     if e == 0:
+        print(f'Choose a small odd number e between 1 < e < phi(n) and ggT(e, phi(n)) == 1')
         e = 0
         for possible_e in range(2, phi):
             # is possible_e odd?
             if possible_e % 2 != 0:
                 if greatest_common_divisor(possible_e, phi) == 1:
                     e = possible_e
-                    print(f'e = {e}')
+                    print(f'Public Key(calculated): e = {e}')
                     break
+    else:
+        print(f'Public Key(given): e = {e}')
 
-    print('d is a number: 1 < d < phi(n) and e*d = 1 mod phi(n)')
+    print('Private Key d is a number: 1 < d < phi(n) and e*d = 1 mod phi(n)')
     d = multiplicative_inverse_modulo(e, phi, out=True)
     if d > 0:
         print(f'd = {d}')
@@ -372,7 +380,7 @@ def hex_to_bin(hexStr):
 
 if __name__ == '__main__':
     #### RSA ####
-    # message_RSA(32, 13, 7)
+    message_RSA(8, 5, 11, 7)
     # RSA(5, 11, 7)
 
     #### Elliptische Kurve ####
@@ -383,5 +391,5 @@ if __name__ == '__main__':
     # print(greatest_common_divisor(280, 147))
     # multiplicative_inverse_modulo(2, 11)
     # fermats_little_theorem(21, 12, 13)
-    # eulersche_phi(495)
+    # eulersche_phi(9)
     print('Done...')
