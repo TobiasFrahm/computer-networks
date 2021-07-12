@@ -144,7 +144,7 @@ def multiplicative_inverse_modulo(a, m, out=False):
     equations = []
     if not out:
         disable_print()
-    if greatest_common_divisor(a, m, out=False) == 1:
+    if greatest_common_divisor(a, m, out=out) == 1:
         while r != 0:
             p = m // a
             r = m - (a * p)
