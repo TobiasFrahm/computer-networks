@@ -1,9 +1,11 @@
 # computer-networks
-This tool was is about learning and understanding the math and logic behind
+This tool should help learning and understanding the math and logic behind
 RSA, elliptic curve, and modula operation used for cryptography algorithm.
 It prints out more or less every calculation step. 
 Just uncomment the function you want to use, put your values into it
 and run it with a python3+ Interpreter.
+
+Surprisingly there is here and there a clone, if you have any ask questions. Feel free to reach out.
 
 RSA
 ```py RSA
