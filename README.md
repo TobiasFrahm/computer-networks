@@ -1,4 +1,4 @@
-# computer-networks
+# encryption-decrypted
 This tool should help learning and understanding the math and logic behind
 RSA, elliptic curve, and modula operation used for cryptography algorithm.
 It prints out more or less every calculation step. 
